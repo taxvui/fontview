@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { X, Copy, ExternalLink, Check, Code, Info } from 'lucide-react';
+import { BrandLogo } from './BrandLogo';
 import { GoogleFont } from '../types/font';
 import { buildGoogleFontUrl, getSortedVariants } from '../services/googleFontsService';
 import { useLanguage } from '../context/LanguageContext';
@@ -54,9 +55,10 @@ export const FontDetailModal: React.FC<FontDetailModalProps> = ({
         aria-labelledby="font-modal-title"
       >
         {/* Header */}
-        <div className="flex items-start justify-between gap-4 pb-4 border-b border-slate-100 dark:border-slate-800">
+        <div className="flex items-start justify-between gap-4 pb-4 border-b border-slate-200/60 dark:border-white/10">
           <div>
             <div className="flex items-center gap-2.5">
+              <BrandLogo className="w-6 h-6" />
               <h2
                 id="font-modal-title"
                 className="text-2xl font-bold text-slate-900 dark:text-white"

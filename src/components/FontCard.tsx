@@ -15,6 +15,9 @@ import { VariableAxesControl } from './VariableAxesControl';
 import { FontLoadStatus } from '../hooks/useFontLoader';
 import { useLanguage } from '../context/LanguageContext';
 import { useToast } from './Toast';
+import { GlassCard } from './ui/glass-card';
+import { GlassBadge } from './ui/glass-badge';
+import { GlassButton } from './ui/glass-button';
 
 interface FontCardProps {
   font: GoogleFont;
@@ -123,7 +126,7 @@ export const FontCard: React.FC<FontCardProps> = ({
   };
 
   return (
-    <article className="liquid-card rounded-2xl p-5 sm:p-6 flex flex-col justify-between relative group">
+    <GlassCard variant="interactive" className="p-5 sm:p-6 flex flex-col justify-between group">
       {/* Top Header */}
       <div>
         <div className="flex items-start justify-between gap-3 mb-3">
@@ -132,17 +135,17 @@ export const FontCard: React.FC<FontCardProps> = ({
               <h3 className="text-lg font-bold text-slate-900 dark:text-white tracking-tight truncate">
                 {font.family}
               </h3>
-              <span className="text-[11px] font-medium px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 capitalize">
+              <GlassBadge variant="default" className="capitalize text-[11px]">
                 {font.category}
-              </span>
+              </GlassBadge>
               {font.isVariable && (
                 <button
                   type="button"
                   onClick={() => setShowAxes(!showAxes)}
-                  className={`text-[11px] font-medium px-2 py-0.5 rounded-md transition-colors flex items-center gap-1 ${
+                  className={`text-[11px] font-medium px-2 py-0.5 rounded-lg transition-all flex items-center gap-1 cursor-pointer ${
                     showAxes
-                      ? 'bg-indigo-600 text-white shadow-xs'
-                      : 'bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-100'
+                      ? 'bg-indigo-600 text-white shadow-sm'
+                      : 'bg-indigo-50/80 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-100 border border-indigo-200/50 dark:border-indigo-800/40'
                   }`}
                   title={t('axesControl')}
                 >
@@ -152,73 +155,70 @@ export const FontCard: React.FC<FontCardProps> = ({
               )}
             </div>
             {font.designer && (
-              <span className="text-[11px] text-slate-400 truncate block mt-0.5">
+              <span className="text-[11px] text-slate-400 dark:text-slate-500 truncate block mt-0.5 font-normal">
                 {font.designer}
               </span>
             )}
           </div>
 
-          {/* Action Icons */}
+          {/* Action Icons with Apple Glass Tactile Buttons */}
           <div className="flex items-center gap-1 shrink-0">
             {/* Copy CSS Button */}
-            <button
-              type="button"
+            <GlassButton
+              variant="glass"
+              size="icon"
               onClick={handleCopyCss}
-              className="p-1.5 rounded-lg text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
               title={t('copyCss')}
               aria-label={`${t('copyCss')} for ${font.family}`}
             >
-              {copied ? <Check className="w-4 h-4 text-emerald-500" /> : <Copy className="w-4 h-4" />}
-            </button>
+              {copied ? <Check className="w-3.5 h-3.5 text-emerald-500" /> : <Copy className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />}
+            </GlassButton>
 
             {/* Favorite Button */}
-            <button
-              type="button"
+            <GlassButton
+              variant="glass"
+              size="icon"
               onClick={(e) => {
                 e.stopPropagation();
                 onToggleFavorite(font.family);
               }}
-              className={`p-1.5 rounded-lg transition-colors ${
-                isFavorite
-                  ? 'text-rose-500 hover:text-rose-600'
-                  : 'text-slate-400 hover:text-rose-500 hover:bg-slate-100 dark:hover:bg-slate-800'
-              }`}
               title={isFavorite ? t('removeFromFavorites') : t('addToFavorites')}
               aria-label={isFavorite ? t('removeFromFavorites') : t('addToFavorites')}
             >
               <Heart
-                className="w-4 h-4"
-                fill={isFavorite ? 'currentColor' : 'none'}
+                className={`w-3.5 h-3.5 transition-colors ${
+                  isFavorite ? 'text-rose-500 fill-rose-500' : 'text-slate-500 dark:text-slate-400 hover:text-rose-500'
+                }`}
               />
-            </button>
+            </GlassButton>
 
             {/* Open Google Fonts External */}
             <a
               href={`https://fonts.google.com/specimen/${encodeURIComponent(font.family)}`}
               target="_blank"
               rel="noreferrer"
-              className="p-1.5 rounded-lg text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+              className="inline-flex items-center justify-center h-8 w-8 rounded-xl bg-white/70 dark:bg-slate-800/60 border border-white/70 dark:border-white/10 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white shadow-xs transition-all hover:scale-105"
               title={t('openGoogleFonts')}
               aria-label={`${t('openGoogleFonts')} ${font.family}`}
             >
-              <ExternalLink className="w-4 h-4" />
+              <ExternalLink className="w-3.5 h-3.5" />
             </a>
 
             {/* Info / Embed details */}
-            <button
-              type="button"
+            <GlassButton
+              variant="glass"
+              size="icon"
               onClick={() => onOpenDetails(font)}
-              className="p-1.5 rounded-lg text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
               title={t('details')}
               aria-label={`${t('details')} for ${font.family}`}
             >
-              <Info className="w-4 h-4" />
-            </button>
+              <Info className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
+            </GlassButton>
           </div>
         </div>
 
-        {/* Live Typography Preview Area */}
-        <div className="my-3 min-h-[96px] flex items-center rounded-xl p-3 bg-slate-50/70 dark:bg-slate-900/50 border border-slate-200/60 dark:border-white/5 transition-colors overflow-hidden">
+        {/* Live Typography Preview Area - Apple Frosted Inset Specimen Plate */}
+        <div className="my-3 min-h-[96px] flex items-center rounded-2xl p-3.5 bg-slate-50/50 dark:bg-slate-950/40 backdrop-blur-md border border-white/80 dark:border-white/5 shadow-[inset_0_1px_3px_rgba(0,0,0,0.03)] dark:shadow-[inset_0_1px_4px_rgba(0,0,0,0.3)] transition-colors overflow-hidden">
           {loadStatus === 'loading' && (
             <div className="w-full flex items-center justify-center py-6 text-xs text-slate-400 animate-pulse gap-2">
               <RotateCw className="w-3.5 h-3.5 animate-spin text-indigo-500" />
@@ -276,6 +276,6 @@ export const FontCard: React.FC<FontCardProps> = ({
           fontSize={previewSettings.fontSize}
         />
       </div>
-    </article>
+    </GlassCard>
   );
 };

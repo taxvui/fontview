@@ -182,6 +182,26 @@
   filter: blur(95px);
 }
 
+@keyframes float-orb-1 {
+  0%, 100% { transform: translate(0px, 0px) scale(1); }
+  50% { transform: translate(40px, -50px) scale(1.08); }
+}
+
+@keyframes float-orb-2 {
+  0%, 100% { transform: translate(0px, 0px) scale(1); }
+  50% { transform: translate(-50px, 40px) scale(1.06); }
+}
+
+@keyframes float-orb-3 {
+  0%, 100% { transform: translate(0px, 0px) scale(1); }
+  50% { transform: translate(35px, 35px) scale(0.95); }
+}
+
+.liquid-orb-1 { animation: float-orb-1 18s ease-in-out infinite; }
+.liquid-orb-2 { animation: float-orb-2 22s ease-in-out infinite; }
+.liquid-orb-3 { animation: float-orb-3 20s ease-in-out infinite; }
+.liquid-orb-4 { animation: float-orb-1 25s ease-in-out infinite reverse; }
+
 /* Background Ambient Gradient */
 .bg-mesh-glow {
   background-color: #f8fafc;

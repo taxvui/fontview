@@ -1,5 +1,7 @@
 import React from 'react';
-import { Sun, Moon, Laptop, KeyRound, Type, Sparkles } from 'lucide-react';
+import { Sun, Moon, Laptop, KeyRound, Sparkles } from 'lucide-react';
+import { BrandLogo } from './BrandLogo';
+import { GlassButton } from './ui/glass-button';
 import { useTheme, ACCENT_PALETTES } from '../context/ThemeContext';
 import { useLanguage } from '../context/LanguageContext';
 import { AccentColor, Language, ThemeMode } from '../types/font';
@@ -40,10 +42,8 @@ export const Header: React.FC<HeaderProps> = ({
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
         {/* Zone 1: Wordmark / Brand */}
         <div className="flex items-center gap-3">
-          <div
-            className={`w-9 h-9 rounded-xl flex items-center justify-center text-white shadow-md bg-gradient-to-br ${accentClasses.gradient}`}
-          >
-            <Type className="w-5 h-5" />
+          <div className="w-10 h-10 rounded-xl flex items-center justify-center liquid-glass shadow-sm p-1.5 border border-white/80 dark:border-white/10 group">
+            <BrandLogo className="w-7 h-7" />
           </div>
           <div>
             <div className="flex items-center gap-2">
@@ -64,24 +64,22 @@ export const Header: React.FC<HeaderProps> = ({
         {/* Zone 2: Navigation & Quick Actions */}
         <div className="flex items-center gap-2 sm:gap-3">
           {/* Favorites quick toggle */}
-          <button
-            type="button"
+          <GlassButton
+            variant="glass"
+            size="sm"
             onClick={onToggleFavoritesOnly}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium border transition-colors ${
-              isFavoritesOnly
-                ? `${accentClasses.bg} text-white border-transparent shadow-sm`
-                : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700'
-            }`}
+            isActive={isFavoritesOnly}
+            className={`text-xs h-9 ${isFavoritesOnly ? `${accentClasses.bg} text-white` : ''}`}
             title={t('filterFavorites')}
             aria-label={t('filterFavorites')}
           >
             <span className={isFavoritesOnly ? 'text-white' : 'text-rose-500'}>♥</span>
             <span className="hidden xs:inline">{t('filterFavorites')}</span>
             <span className="text-[11px] opacity-80 tabular-nums">({favoritesCount})</span>
-          </button>
+          </GlassButton>
 
           {/* 6 Accent Color Dots Picker */}
-          <div className="hidden lg:flex items-center gap-1 p-1 bg-slate-100/90 dark:bg-slate-800/90 rounded-lg border border-slate-200/60 dark:border-slate-700/60">
+          <div className="hidden lg:flex items-center gap-1.5 p-1 liquid-glass rounded-xl shadow-xs">
             {accentKeys.map((accKey) => {
               const pal = ACCENT_PALETTES[accKey];
               const isSelected = accent === accKey;
@@ -90,8 +88,8 @@ export const Header: React.FC<HeaderProps> = ({
                   key={accKey}
                   type="button"
                   onClick={() => setAccent(accKey)}
-                  className={`w-5 h-5 rounded-full transition-transform focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 dark:focus-visible:ring-offset-slate-900 ${
-                    isSelected ? 'scale-115 ring-2 ring-slate-900 dark:ring-white shadow-sm' : 'hover:scale-110 opacity-80 hover:opacity-100'
+                  className={`w-5 h-5 rounded-full transition-transform cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 dark:focus-visible:ring-offset-slate-900 ${
+                    isSelected ? 'scale-115 ring-2 ring-slate-900 dark:ring-white shadow-sm' : 'hover:scale-110 opacity-75 hover:opacity-100'
                   }`}
                   style={{ backgroundColor: pal.colorHex }}
                   title={`${pal.name}`}
@@ -102,15 +100,15 @@ export const Header: React.FC<HeaderProps> = ({
           </div>
 
           {/* Language Switcher */}
-          <div className="relative inline-flex items-center bg-slate-100 dark:bg-slate-800 rounded-lg p-0.5 border border-slate-200/80 dark:border-slate-700/80 text-xs font-medium">
+          <div className="relative inline-flex items-center p-0.5 rounded-xl liquid-glass text-xs font-medium shadow-xs">
             {languages.map((item) => (
               <button
                 key={item.code}
                 type="button"
                 onClick={() => setLanguage(item.code)}
-                className={`px-2 py-1 rounded-md transition-all ${
+                className={`px-2.5 py-1 rounded-lg transition-all cursor-pointer ${
                   language === item.code
-                    ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-xs font-semibold'
+                    ? 'bg-slate-900 dark:bg-white text-white dark:text-slate-900 shadow-xs font-semibold'
                     : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100'
                 }`}
                 aria-label={`Switch to ${item.label}`}
@@ -121,11 +119,11 @@ export const Header: React.FC<HeaderProps> = ({
           </div>
 
           {/* Theme Mode Switcher */}
-          <div className="flex items-center p-0.5 rounded-xl bg-slate-100/90 dark:bg-slate-800/90 border border-slate-200/80 dark:border-white/10 text-xs">
+          <div className="flex items-center p-0.5 rounded-xl liquid-glass text-xs shadow-xs">
             <button
               type="button"
               onClick={() => setTheme('light')}
-              className={`p-1.5 rounded-lg transition-all ${
+              className={`p-1.5 rounded-lg transition-all cursor-pointer ${
                 theme === 'light'
                   ? 'bg-white text-amber-500 shadow-xs font-semibold'
                   : 'text-slate-400 hover:text-slate-700 dark:hover:text-slate-200'
@@ -138,9 +136,9 @@ export const Header: React.FC<HeaderProps> = ({
             <button
               type="button"
               onClick={() => setTheme('dark')}
-              className={`p-1.5 rounded-lg transition-all ${
+              className={`p-1.5 rounded-lg transition-all cursor-pointer ${
                 theme === 'dark'
-                  ? 'bg-slate-700 text-indigo-300 shadow-xs font-semibold'
+                  ? 'bg-slate-800 text-indigo-300 shadow-xs font-semibold'
                   : 'text-slate-400 hover:text-slate-700 dark:hover:text-slate-200'
               }`}
               title={t('darkMode')}
@@ -151,9 +149,9 @@ export const Header: React.FC<HeaderProps> = ({
             <button
               type="button"
               onClick={() => setTheme('system')}
-              className={`p-1.5 rounded-lg transition-all ${
+              className={`p-1.5 rounded-lg transition-all cursor-pointer ${
                 theme === 'system'
-                  ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-xs font-semibold'
+                  ? 'bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-xs font-semibold'
                   : 'text-slate-400 hover:text-slate-700 dark:hover:text-slate-200'
               }`}
               title={t('systemMode')}
@@ -164,15 +162,15 @@ export const Header: React.FC<HeaderProps> = ({
           </div>
 
           {/* API Key Settings Button */}
-          <button
-            type="button"
+          <GlassButton
+            variant="glass"
+            size="icon"
             onClick={onOpenApiSettings}
-            className="p-2 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
             title={t('apiSettings')}
             aria-label={t('apiSettings')}
           >
             <KeyRound className="w-4 h-4" />
-          </button>
+          </GlassButton>
         </div>
       </div>
     </header>

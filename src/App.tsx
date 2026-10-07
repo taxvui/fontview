@@ -9,6 +9,7 @@ import { FontGrid } from './components/FontGrid';
 import { Pagination } from './components/Pagination';
 import { FontDetailModal } from './components/FontDetailModal';
 import { ApiSettingsModal } from './components/ApiSettingsModal';
+import { BrandLogo } from './components/BrandLogo';
 import {
   FilterState,
   GoogleFont,
@@ -214,10 +215,10 @@ const MainAppContent: React.FC = () => {
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col bg-mesh-glow relative overflow-x-hidden selection:bg-indigo-500 selection:text-white">
       {/* Ambient 3D Liquid Orbs for Prismatic Glass Refraction */}
       <div className="liquid-mesh-container" aria-hidden="true">
-        <div className="liquid-orb w-[540px] h-[540px] -top-24 -left-24 bg-indigo-500/25 dark:bg-indigo-600/20" />
-        <div className="liquid-orb w-[480px] h-[480px] top-1/4 -right-28 bg-cyan-400/20 dark:bg-cyan-500/15" />
-        <div className="liquid-orb w-[620px] h-[620px] top-2/3 left-1/4 bg-rose-400/15 dark:bg-rose-500/10" />
-        <div className="liquid-orb w-[420px] h-[420px] -bottom-24 right-1/4 bg-violet-500/20 dark:bg-violet-600/15" />
+        <div className="liquid-orb liquid-orb-1 w-[540px] h-[540px] -top-24 -left-24 bg-indigo-500/25 dark:bg-indigo-600/20" />
+        <div className="liquid-orb liquid-orb-2 w-[480px] h-[480px] top-1/4 -right-28 bg-cyan-400/20 dark:bg-cyan-500/15" />
+        <div className="liquid-orb liquid-orb-3 w-[620px] h-[620px] top-2/3 left-1/4 bg-rose-400/15 dark:bg-rose-500/10" />
+        <div className="liquid-orb liquid-orb-4 w-[420px] h-[420px] -bottom-24 right-1/4 bg-violet-500/20 dark:bg-violet-600/15" />
       </div>
 
       {/* Top Header */}
@@ -271,12 +272,15 @@ const MainAppContent: React.FC = () => {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-slate-200/60 dark:border-slate-800/60 py-6 px-4 text-center text-xs text-slate-500 dark:text-slate-400">
+      <footer className="relative z-10 border-t border-slate-200/60 dark:border-white/10 py-6 px-4 text-center text-xs text-slate-500 dark:text-slate-400">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
-          <p>
-            Google Fonts Studio · {t('catalogCount', { count: allFonts.length })} (
-            {catalogSource === 'api' ? 'Live Google API' : catalogSource === 'cache' ? 'API Cached' : 'Catalog'})
-          </p>
+          <div className="flex items-center gap-2">
+            <BrandLogo className="w-5 h-5" />
+            <p>
+              Google Fonts Studio · {t('catalogCount', { count: allFonts.length })} (
+              {catalogSource === 'api' ? 'Live Google API' : catalogSource === 'cache' ? 'API Cached' : 'Catalog'})
+            </p>
+          </div>
           <div className="flex items-center gap-4">
             <a
               href="https://fonts.google.com"

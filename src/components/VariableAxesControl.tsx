@@ -18,7 +18,7 @@ export const VariableAxesControl: React.FC<VariableAxesControlProps> = ({
   if (!axes || axes.length === 0) return null;
 
   return (
-    <div className="mt-3 pt-3 border-t border-slate-200/60 dark:border-slate-800/60 bg-slate-50/70 dark:bg-slate-900/50 p-3 rounded-xl">
+    <div className="mt-3 pt-3 bg-slate-50/70 dark:bg-slate-950/40 backdrop-blur-md p-3.5 rounded-2xl border border-slate-200/60 dark:border-white/5 shadow-[inset_0_1px_2px_rgba(0,0,0,0.02)]">
       <div className="flex items-center justify-between mb-2.5">
         <div className="flex items-center gap-1.5 text-xs font-semibold text-slate-700 dark:text-slate-300">
           <Sliders className="w-3.5 h-3.5 text-indigo-500" />
@@ -27,7 +27,7 @@ export const VariableAxesControl: React.FC<VariableAxesControlProps> = ({
         <button
           type="button"
           onClick={onReset}
-          className="text-[11px] text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 flex items-center gap-1"
+          className="text-[11px] text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 flex items-center gap-1 cursor-pointer"
           title="Reset Axes"
         >
           <RotateCcw className="w-3 h-3" />

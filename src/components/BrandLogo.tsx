@@ -1,0 +1,36 @@
+import React from 'react';
+
+interface BrandLogoProps {
+  className?: string;
+  size?: number;
+}
+
+export const BrandLogo: React.FC<BrandLogoProps> = ({
+  className = 'w-7 h-7',
+  size,
+}) => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 1024 1024"
+      xmlSpace="preserve"
+      className={`${className} shrink-0 transition-transform duration-300 hover:scale-105`}
+      width={size}
+      height={size}
+      aria-label="Google Fonts Logo"
+    >
+      <path
+        d="m775.91 741.21-218.5-331.88c-23.62-34.25-25.98-79.13-5.91-116.93s60.23-61.42 103.93-62.6 85.04 20.08 107.48 56.69l217.32 331.88c23.62 35.43 24.8 80.31 3.54 116.93-21.26 37.79-61.42 60.23-105.11 60.23-41.33.01-80.31-21.25-102.75-54.32"
+        fill="#ee325f"
+      />
+      <path
+        d="M508.99 795.54c-41.34 0-80.31-21.26-101.57-54.33L190.1 410.51c-25.98-35.43-28.35-80.31-8.27-118.11s59.05-61.42 103.93-62.6 85.04 21.26 107.48 57.87l217.32 331.88c23.62 35.43 24.8 80.31 3.54 116.93-21.25 36.62-61.41 59.06-105.11 59.06"
+        fill="#ffcd05"
+      />
+      <path
+        d="M268.05 675.07c0-66.14-54.33-120.47-120.47-120.47S27.12 608.93 27.12 675.07s54.33 120.47 120.47 120.47c67.32 0 120.46-53.15 120.46-120.47"
+        fill="#45b870"
+      />
+    </svg>
+  );
+};

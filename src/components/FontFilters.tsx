@@ -3,6 +3,7 @@ import { Search, X, SlidersHorizontal, ArrowUpDown } from 'lucide-react';
 import { FilterState, FontCategory, SortOption } from '../types/font';
 import { useLanguage } from '../context/LanguageContext';
 import { useTheme } from '../context/ThemeContext';
+import { GlassButton } from './ui/glass-button';
 
 interface FontFiltersProps {
   filters: FilterState;
@@ -121,22 +122,20 @@ export const FontFilters: React.FC<FontFiltersProps> = ({
       {/* Categories & Filter Toggles Row */}
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3 pt-1">
         {/* Category Segmented Buttons */}
-        <div className="flex flex-wrap items-center gap-1.5 p-1 liquid-glass rounded-xl">
+        <div className="flex flex-wrap items-center gap-1 p-1 liquid-glass rounded-2xl shadow-xs">
           {categories.map((cat) => {
             const isActive = filters.category === cat.key;
             return (
-              <button
+              <GlassButton
                 key={cat.key}
-                type="button"
+                variant="pill"
+                size="sm"
+                isActive={isActive}
                 onClick={() => onChange({ category: cat.key })}
-                className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-all ${
-                  isActive
-                    ? 'bg-slate-900 dark:bg-white text-white dark:text-slate-900 shadow-xs font-semibold'
-                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
-                }`}
+                className="text-xs h-7 px-3"
               >
                 {cat.label}
-              </button>
+              </GlassButton>
             );
           })}
         </div>
@@ -144,54 +143,49 @@ export const FontFilters: React.FC<FontFiltersProps> = ({
         {/* Feature Toggles & Clear */}
         <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
           {/* Variable Fonts toggle */}
-          <button
-            type="button"
+          <GlassButton
+            variant="glass"
+            size="sm"
+            isActive={filters.variableOnly}
             onClick={() => onChange({ variableOnly: !filters.variableOnly })}
-            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
-              filters.variableOnly
-                ? `${accentClasses.bg} text-white shadow-xs`
-                : 'liquid-btn text-slate-700 dark:text-slate-300'
-            }`}
+            className={`text-xs h-8 ${filters.variableOnly ? `${accentClasses.bg} text-white` : ''}`}
           >
             {t('filterVariable')}
-          </button>
+          </GlassButton>
 
           {/* Has Italic toggle */}
-          <button
-            type="button"
+          <GlassButton
+            variant="glass"
+            size="sm"
+            isActive={filters.italicOnly}
             onClick={() => onChange({ italicOnly: !filters.italicOnly })}
-            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
-              filters.italicOnly
-                ? `${accentClasses.bg} text-white shadow-xs`
-                : 'liquid-btn text-slate-700 dark:text-slate-300'
-            }`}
+            className={`text-xs h-8 ${filters.italicOnly ? `${accentClasses.bg} text-white` : ''}`}
           >
             {t('filterItalic')}
-          </button>
+          </GlassButton>
 
           {/* Multiple Weights toggle */}
-          <button
-            type="button"
+          <GlassButton
+            variant="glass"
+            size="sm"
+            isActive={filters.multipleWeightsOnly}
             onClick={() => onChange({ multipleWeightsOnly: !filters.multipleWeightsOnly })}
-            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
-              filters.multipleWeightsOnly
-                ? `${accentClasses.bg} text-white shadow-xs`
-                : 'liquid-btn text-slate-700 dark:text-slate-300'
-            }`}
+            className={`text-xs h-8 ${filters.multipleWeightsOnly ? `${accentClasses.bg} text-white` : ''}`}
           >
             {t('filterMultiWeights')}
-          </button>
+          </GlassButton>
 
           {/* Clear Filters Button */}
           {hasActiveFilters && (
-            <button
-              type="button"
+            <GlassButton
+              variant="ghost"
+              size="sm"
               onClick={onClearFilters}
-              className="px-2.5 py-1.5 rounded-lg text-xs font-medium text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-colors flex items-center gap-1"
+              className="text-xs h-8 text-rose-600 dark:text-rose-400 hover:bg-rose-500/10"
             >
               <X className="w-3.5 h-3.5" />
               <span>{t('clearAllFilters')}</span>
-            </button>
+            </GlassButton>
           )}
         </div>
       </div>

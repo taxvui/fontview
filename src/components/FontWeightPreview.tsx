@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { ParsedVariant } from '../types/font';
 import { ChevronDown, ChevronUp } from 'lucide-react';
+import { GlassButton } from './ui/glass-button';
 
 interface FontWeightPreviewProps {
   fontFamily: string;
@@ -45,19 +46,17 @@ export const FontWeightPreview: React.FC<FontWeightPreviewProps> = ({
         {variants.map((v) => {
           const isSelected = selectedVariant?.raw === v.raw;
           return (
-            <button
+            <GlassButton
               key={v.raw}
-              type="button"
+              variant="pill"
+              size="sm"
+              isActive={isSelected}
               onClick={() => onSelectVariant(v)}
-              className={`shrink-0 px-2 py-0.5 rounded text-[11px] font-medium transition-all ${
-                isSelected
-                  ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 shadow-xs'
-                  : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'
-              }`}
+              className="shrink-0 h-6 px-2.5 text-[11px]"
               title={`Preview in ${v.label}`}
             >
               {v.label}
-            </button>
+            </GlassButton>
           );
         })}
       </div>

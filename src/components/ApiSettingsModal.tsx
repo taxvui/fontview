@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { X, KeyRound, Check, RefreshCw, AlertCircle } from 'lucide-react';
+import { BrandLogo } from './BrandLogo';
 import { useLanguage } from '../context/LanguageContext';
 import { getStoredApiKey, setStoredApiKey } from '../services/googleFontsService';
 import { useToast } from './Toast';
@@ -84,8 +85,8 @@ export const ApiSettingsModal: React.FC<ApiSettingsModalProps> = ({
       >
         <div className="flex items-center justify-between pb-3 border-b border-slate-200/60 dark:border-white/10">
           <div className="flex items-center gap-2.5">
-            <div className="p-2 rounded-lg bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400">
-              <KeyRound className="w-5 h-5" />
+            <div className="p-1.5 rounded-xl liquid-glass shadow-xs">
+              <BrandLogo className="w-6 h-6" />
             </div>
             <h3
               id="api-settings-title"

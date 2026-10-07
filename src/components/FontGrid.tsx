@@ -4,6 +4,7 @@ import { FontCard } from './FontCard';
 import { useFontLoader } from '../hooks/useFontLoader';
 import { useLanguage } from '../context/LanguageContext';
 import { Sparkles, HelpCircle } from 'lucide-react';
+import { GlassCard } from './ui/glass-card';
 
 interface FontGridProps {
   fonts: GoogleFont[];
@@ -25,7 +26,7 @@ export const FontGrid: React.FC<FontGridProps> = ({
 
   if (fonts.length === 0) {
     return (
-      <div className="w-full py-16 px-4 text-center liquid-glass rounded-2xl border border-slate-200/80 dark:border-slate-800/80 flex flex-col items-center justify-center">
+      <GlassCard variant="elevated" className="w-full py-16 px-4 text-center flex flex-col items-center justify-center">
         <div className="w-12 h-12 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-400 mb-3">
           <HelpCircle className="w-6 h-6" />
         </div>
@@ -35,7 +36,7 @@ export const FontGrid: React.FC<FontGridProps> = ({
         <p className="text-xs text-slate-500 max-w-sm">
           Try adjusting your search query, selecting different categories, or clearing active filters.
         </p>
-      </div>
+      </GlassCard>
     );
   }
 
