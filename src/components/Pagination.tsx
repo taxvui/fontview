@@ -69,7 +69,7 @@ export const Pagination: React.FC<PaginationProps> = ({
           type="button"
           disabled={currentPage <= 1}
           onClick={() => onPageChange(currentPage - 1)}
-          className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-medium bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+          className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-medium liquid-btn text-slate-700 dark:text-slate-200 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
           aria-label={t('prevPage')}
         >
           <ChevronLeft className="w-3.5 h-3.5" />
@@ -98,7 +98,7 @@ export const Pagination: React.FC<PaginationProps> = ({
                 className={`w-8 h-8 rounded-lg text-xs font-semibold flex items-center justify-center transition-all ${
                   isCurrent
                     ? `${accentClasses.bg} text-white shadow-xs`
-                    : 'bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700'
+                    : 'liquid-btn text-slate-700 dark:text-slate-300'
                 }`}
                 aria-label={`Page ${pageNum}`}
                 aria-current={isCurrent ? 'page' : undefined}
@@ -114,7 +114,7 @@ export const Pagination: React.FC<PaginationProps> = ({
           type="button"
           disabled={currentPage >= totalPages}
           onClick={() => onPageChange(currentPage + 1)}
-          className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-medium bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+          className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-medium liquid-btn text-slate-700 dark:text-slate-200 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
           aria-label={t('nextPage')}
         >
           <span className="hidden xs:inline">{t('nextPage')}</span>
@@ -132,12 +132,12 @@ export const Pagination: React.FC<PaginationProps> = ({
           value={jumpInput}
           onChange={(e) => setJumpInput(e.target.value)}
           placeholder={`${currentPage}`}
-          className="w-14 px-2 py-1 rounded-md text-xs font-medium text-center bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-indigo-500"
+          className="w-14 px-2 py-1 rounded-md text-xs font-medium text-center liquid-input text-slate-900 dark:text-white focus-visible:outline-none"
           aria-label={t('jumpToPage')}
         />
         <button
           type="submit"
-          className="px-2 py-1 rounded-md bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs font-medium"
+          className="px-2.5 py-1 rounded-md liquid-btn text-slate-700 dark:text-slate-200 text-xs font-medium"
         >
           Go
         </button>

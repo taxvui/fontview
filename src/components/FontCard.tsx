@@ -218,7 +218,7 @@ export const FontCard: React.FC<FontCardProps> = ({
         </div>
 
         {/* Live Typography Preview Area */}
-        <div className="my-3 min-h-[90px] flex items-center rounded-xl p-2.5 transition-colors overflow-hidden">
+        <div className="my-3 min-h-[96px] flex items-center rounded-xl p-3 bg-slate-50/70 dark:bg-slate-900/50 border border-slate-200/60 dark:border-white/5 transition-colors overflow-hidden">
           {loadStatus === 'loading' && (
             <div className="w-full flex items-center justify-center py-6 text-xs text-slate-400 animate-pulse gap-2">
               <RotateCw className="w-3.5 h-3.5 animate-spin text-indigo-500" />
@@ -242,7 +242,7 @@ export const FontCard: React.FC<FontCardProps> = ({
           {loadStatus !== 'loading' && loadStatus !== 'error' && (
             <div
               style={previewStyle}
-              className="w-full break-words select-text transition-all leading-normal"
+              className="w-full break-words select-text transition-all leading-normal text-slate-900 dark:text-slate-100"
             >
               {previewSettings.text || t('defaultPreviewText')}
             </div>

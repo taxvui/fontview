@@ -93,7 +93,7 @@ export const PreviewControls: React.FC<PreviewControlsProps> = ({
             value={settings.text}
             onChange={(e) => onChange({ text: e.target.value })}
             placeholder={t('previewTextPlaceholder')}
-            className="w-full px-3.5 py-2.5 rounded-xl bg-white/90 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-700/80 text-slate-900 dark:text-white placeholder-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 text-base sm:text-lg resize-y min-h-[64px] transition-shadow shadow-xs"
+            className="w-full px-4 py-3 rounded-xl liquid-input text-slate-900 dark:text-slate-100 placeholder-slate-400 focus-visible:outline-none text-base sm:text-lg resize-y min-h-[68px] transition-all"
           />
         </div>
       </div>
@@ -306,7 +306,7 @@ export const PreviewControls: React.FC<PreviewControlsProps> = ({
             </span>
             <div className="flex items-center gap-3">
               {/* Text Color Swatches */}
-              <div className="flex items-center gap-1">
+              <div className="flex items-center gap-1.5">
                 <input
                   type="color"
                   value={settings.textColor.startsWith('#') ? settings.textColor : '#0f172a'}
@@ -314,8 +314,20 @@ export const PreviewControls: React.FC<PreviewControlsProps> = ({
                   className="w-6 h-6 rounded-md cursor-pointer border border-slate-300 dark:border-slate-600 p-0 overflow-hidden"
                   title={t('textColor')}
                 />
+                <button
+                  type="button"
+                  onClick={() => onChange({ textColor: '' })}
+                  className={`px-1.5 py-0.5 rounded text-[10px] transition-colors ${
+                    !settings.textColor
+                      ? 'bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-semibold shadow-xs'
+                      : 'bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-slate-900 dark:hover:text-white'
+                  }`}
+                  title="Auto theme text color"
+                >
+                  Auto
+                </button>
                 <div className="hidden xs:flex items-center gap-0.5">
-                  {TEXT_COLOR_SWATCHES.slice(0, 4).map((c) => (
+                  {TEXT_COLOR_SWATCHES.slice(2, 6).map((c) => (
                     <button
                       key={c}
                       type="button"
@@ -329,7 +341,7 @@ export const PreviewControls: React.FC<PreviewControlsProps> = ({
               </div>
 
               {/* Background Color Swatches */}
-              <div className="flex items-center gap-1 pl-2 border-l border-slate-200 dark:border-slate-700">
+              <div className="flex items-center gap-1.5 pl-2 border-l border-slate-200 dark:border-slate-700">
                 <input
                   type="color"
                   value={
@@ -346,7 +358,11 @@ export const PreviewControls: React.FC<PreviewControlsProps> = ({
                 <button
                   type="button"
                   onClick={() => onChange({ bgColor: 'transparent' })}
-                  className="px-1.5 py-0.5 rounded text-[10px] bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-slate-900 dark:hover:text-white"
+                  className={`px-1.5 py-0.5 rounded text-[10px] transition-colors ${
+                    settings.bgColor === 'transparent'
+                      ? 'bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-semibold shadow-xs'
+                      : 'bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-slate-900 dark:hover:text-white'
+                  }`}
                   title="Transparent Background"
                 >
                   Clear

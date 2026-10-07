@@ -77,12 +77,12 @@ export const ApiSettingsModal: React.FC<ApiSettingsModalProps> = ({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-slate-950/60 backdrop-blur-sm animate-in fade-in duration-200">
       <div
-        className="w-full max-w-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl p-6 sm:p-7 space-y-5"
+        className="w-full max-w-lg liquid-glass rounded-2xl shadow-2xl p-6 sm:p-7 space-y-5"
         role="dialog"
         aria-modal="true"
         aria-labelledby="api-settings-title"
       >
-        <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
+        <div className="flex items-center justify-between pb-3 border-b border-slate-200/60 dark:border-white/10">
           <div className="flex items-center gap-2.5">
             <div className="p-2 rounded-lg bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400">
               <KeyRound className="w-5 h-5" />
@@ -121,7 +121,7 @@ export const ApiSettingsModal: React.FC<ApiSettingsModalProps> = ({
             value={apiKey}
             onChange={(e) => setApiKey(e.target.value)}
             placeholder={t('apiKeyInputPlaceholder')}
-            className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-sm text-slate-900 dark:text-white font-mono placeholder-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+            className="w-full px-3.5 py-2.5 rounded-xl liquid-input text-sm text-slate-900 dark:text-white font-mono placeholder-slate-400 focus-visible:outline-none"
           />
         </div>
 

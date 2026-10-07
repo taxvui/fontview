@@ -67,7 +67,7 @@ export const FontFilters: React.FC<FontFiltersProps> = ({
             value={filters.search}
             onChange={(e) => onChange({ search: e.target.value })}
             placeholder={t('searchPlaceholder')}
-            className="w-full pl-10 pr-9 py-2.5 rounded-xl bg-white/90 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 text-sm text-slate-900 dark:text-white placeholder-slate-400 shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+            className="w-full pl-10 pr-9 py-2.5 rounded-xl liquid-input text-sm text-slate-900 dark:text-white placeholder-slate-400 focus-visible:outline-none"
           />
           {filters.search && (
             <button
@@ -88,11 +88,11 @@ export const FontFilters: React.FC<FontFiltersProps> = ({
             <select
               value={filters.subset}
               onChange={(e) => onChange({ subset: e.target.value })}
-              className="w-full sm:w-auto px-3 py-2.5 rounded-xl text-xs font-medium bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 shadow-xs cursor-pointer"
+              className="w-full sm:w-auto px-3.5 py-2.5 rounded-xl text-xs font-medium liquid-btn text-slate-700 dark:text-slate-200 focus-visible:outline-none cursor-pointer"
               aria-label="Filter by character subset"
             >
               {subsets.map((s) => (
-                <option key={s.key} value={s.key}>
+                <option key={s.key} value={s.key} className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white">
                   {s.label}
                 </option>
               ))}
@@ -105,11 +105,11 @@ export const FontFilters: React.FC<FontFiltersProps> = ({
             <select
               value={filters.sortBy}
               onChange={(e) => onChange({ sortBy: e.target.value as SortOption })}
-              className="pl-8 pr-4 py-2.5 rounded-xl text-xs font-medium bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 shadow-xs cursor-pointer"
+              className="pl-8 pr-4 py-2.5 rounded-xl text-xs font-medium liquid-btn text-slate-700 dark:text-slate-200 focus-visible:outline-none cursor-pointer"
               aria-label="Sort fonts"
             >
               {sortOptions.map((opt) => (
-                <option key={opt.value} value={opt.value}>
+                <option key={opt.value} value={opt.value} className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white">
                   {opt.label}
                 </option>
               ))}
@@ -121,7 +121,7 @@ export const FontFilters: React.FC<FontFiltersProps> = ({
       {/* Categories & Filter Toggles Row */}
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3 pt-1">
         {/* Category Segmented Buttons */}
-        <div className="flex flex-wrap items-center gap-1.5 p-1 bg-slate-100/90 dark:bg-slate-900/90 rounded-xl border border-slate-200/80 dark:border-slate-800/80">
+        <div className="flex flex-wrap items-center gap-1.5 p-1 liquid-glass rounded-xl">
           {categories.map((cat) => {
             const isActive = filters.category === cat.key;
             return (
@@ -131,7 +131,7 @@ export const FontFilters: React.FC<FontFiltersProps> = ({
                 onClick={() => onChange({ category: cat.key })}
                 className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-all ${
                   isActive
-                    ? 'bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-xs font-semibold'
+                    ? 'bg-slate-900 dark:bg-white text-white dark:text-slate-900 shadow-xs font-semibold'
                     : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
                 }`}
               >
@@ -147,10 +147,10 @@ export const FontFilters: React.FC<FontFiltersProps> = ({
           <button
             type="button"
             onClick={() => onChange({ variableOnly: !filters.variableOnly })}
-            className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-colors ${
+            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
               filters.variableOnly
-                ? `${accentClasses.bg} text-white border-transparent shadow-xs`
-                : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700'
+                ? `${accentClasses.bg} text-white shadow-xs`
+                : 'liquid-btn text-slate-700 dark:text-slate-300'
             }`}
           >
             {t('filterVariable')}
@@ -160,10 +160,10 @@ export const FontFilters: React.FC<FontFiltersProps> = ({
           <button
             type="button"
             onClick={() => onChange({ italicOnly: !filters.italicOnly })}
-            className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-colors ${
+            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
               filters.italicOnly
-                ? `${accentClasses.bg} text-white border-transparent shadow-xs`
-                : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700'
+                ? `${accentClasses.bg} text-white shadow-xs`
+                : 'liquid-btn text-slate-700 dark:text-slate-300'
             }`}
           >
             {t('filterItalic')}
@@ -173,10 +173,10 @@ export const FontFilters: React.FC<FontFiltersProps> = ({
           <button
             type="button"
             onClick={() => onChange({ multipleWeightsOnly: !filters.multipleWeightsOnly })}
-            className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-colors ${
+            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
               filters.multipleWeightsOnly
-                ? `${accentClasses.bg} text-white border-transparent shadow-xs`
-                : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700'
+                ? `${accentClasses.bg} text-white shadow-xs`
+                : 'liquid-btn text-slate-700 dark:text-slate-300'
             }`}
           >
             {t('filterMultiWeights')}
