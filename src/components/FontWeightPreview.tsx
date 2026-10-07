@@ -24,7 +24,7 @@ export const FontWeightPreview: React.FC<FontWeightPreviewProps> = ({
   if (!variants || variants.length === 0) return null;
 
   return (
-    <div className="mt-3 pt-3 border-t border-slate-200/60 dark:border-slate-800/60">
+    <div className="mt-3 pt-3 border-t border-slate-200/60 dark:border-white/10">
       {/* Variant Pills Bar */}
       <div className="flex items-center justify-between gap-2 mb-2">
         <span className="text-[11px] font-semibold text-slate-500 dark:text-slate-400">

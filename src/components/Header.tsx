@@ -119,13 +119,13 @@ export const Header: React.FC<HeaderProps> = ({
           </div>
 
           {/* Theme Mode Switcher */}
-          <div className="flex items-center p-0.5 rounded-xl liquid-glass text-xs shadow-xs">
+          <div className="flex items-center p-1 rounded-2xl liquid-glass text-xs shadow-xs border border-white/70 dark:border-white/10">
             <button
               type="button"
               onClick={() => setTheme('light')}
-              className={`p-1.5 rounded-lg transition-all cursor-pointer ${
+              className={`p-1.5 rounded-xl transition-all cursor-pointer ${
                 theme === 'light'
-                  ? 'bg-white text-amber-500 shadow-xs font-semibold'
+                  ? 'bg-white text-amber-500 shadow-xs font-semibold border border-amber-200/50'
                   : 'text-slate-400 hover:text-slate-700 dark:hover:text-slate-200'
               }`}
               title={t('lightMode')}
@@ -136,9 +136,9 @@ export const Header: React.FC<HeaderProps> = ({
             <button
               type="button"
               onClick={() => setTheme('dark')}
-              className={`p-1.5 rounded-lg transition-all cursor-pointer ${
+              className={`p-1.5 rounded-xl transition-all cursor-pointer ${
                 theme === 'dark'
-                  ? 'bg-slate-800 text-indigo-300 shadow-xs font-semibold'
+                  ? 'bg-slate-800 text-indigo-300 shadow-xs font-semibold border border-indigo-500/30'
                   : 'text-slate-400 hover:text-slate-700 dark:hover:text-slate-200'
               }`}
               title={t('darkMode')}
@@ -149,9 +149,9 @@ export const Header: React.FC<HeaderProps> = ({
             <button
               type="button"
               onClick={() => setTheme('system')}
-              className={`p-1.5 rounded-lg transition-all cursor-pointer ${
+              className={`p-1.5 rounded-xl transition-all cursor-pointer ${
                 theme === 'system'
-                  ? 'bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-xs font-semibold'
+                  ? 'bg-white/90 dark:bg-slate-800 text-slate-900 dark:text-white shadow-xs font-semibold border border-slate-200/60 dark:border-white/10'
                   : 'text-slate-400 hover:text-slate-700 dark:hover:text-slate-200'
               }`}
               title={t('systemMode')}

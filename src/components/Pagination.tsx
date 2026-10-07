@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Layers } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import { useTheme } from '../context/ThemeContext';
+import { GlassButton } from './ui/glass-button';
+
+export const PAGE_SIZE_OPTIONS = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 100];
 
 interface PaginationProps {
   currentPage: number;
@@ -9,6 +12,7 @@ interface PaginationProps {
   totalItems: number;
   pageSize: number;
   onPageChange: (page: number) => void;
+  onPageSizeChange: (size: number) => void;
 }
 
 export const Pagination: React.FC<PaginationProps> = ({
@@ -17,14 +21,13 @@ export const Pagination: React.FC<PaginationProps> = ({
   totalItems,
   pageSize,
   onPageChange,
+  onPageSizeChange,
 }) => {
   const { t } = useLanguage();
   const { accentClasses } = useTheme();
   const [jumpInput, setJumpInput] = useState('');
 
-  if (totalPages <= 1) return null;
-
-  const startItem = (currentPage - 1) * pageSize + 1;
+  const startItem = totalItems === 0 ? 0 : (currentPage - 1) * pageSize + 1;
   const endItem = Math.min(currentPage * pageSize, totalItems);
 
   // Generate page numbers with smart ellipsis
@@ -56,92 +59,124 @@ export const Pagination: React.FC<PaginationProps> = ({
   };
 
   return (
-    <div className="mt-8 pt-6 border-t border-slate-200/60 dark:border-slate-800/60 flex flex-col sm:flex-row items-center justify-between gap-4">
-      {/* Count information */}
-      <div className="text-xs font-medium text-slate-500 dark:text-slate-400">
-        {t('showingFonts', { start: startItem, end: endItem, total: totalItems })}
-      </div>
-
-      {/* Page navigation controls */}
-      <div className="flex items-center gap-1.5 flex-wrap justify-center">
-        {/* Previous Button */}
-        <button
-          type="button"
-          disabled={currentPage <= 1}
-          onClick={() => onPageChange(currentPage - 1)}
-          className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-medium liquid-btn text-slate-700 dark:text-slate-200 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
-          aria-label={t('prevPage')}
-        >
-          <ChevronLeft className="w-3.5 h-3.5" />
-          <span className="hidden xs:inline">{t('prevPage')}</span>
-        </button>
-
-        {/* Numbered buttons */}
-        <div className="flex items-center gap-1">
-          {getPageNumbers().map((p, idx) => {
-            if (p === '...') {
-              return (
-                <span key={`ellipsis-${idx}`} className="px-2 text-xs text-slate-400">
-                  ...
-                </span>
-              );
-            }
-
-            const pageNum = p as number;
-            const isCurrent = pageNum === currentPage;
-
-            return (
-              <button
-                key={pageNum}
-                type="button"
-                onClick={() => onPageChange(pageNum)}
-                className={`w-8 h-8 rounded-lg text-xs font-semibold flex items-center justify-center transition-all ${
-                  isCurrent
-                    ? `${accentClasses.bg} text-white shadow-xs`
-                    : 'liquid-btn text-slate-700 dark:text-slate-300'
-                }`}
-                aria-label={`Page ${pageNum}`}
-                aria-current={isCurrent ? 'page' : undefined}
-              >
-                {pageNum}
-              </button>
-            );
-          })}
+    <div className="mt-8 pt-6 border-t border-slate-200/60 dark:border-white/10 flex flex-col lg:flex-row items-center justify-between gap-4">
+      {/* Left side: Count information & Page Size Selector */}
+      <div className="flex flex-wrap items-center gap-3">
+        <div className="text-xs font-medium text-slate-500 dark:text-slate-400">
+          {t('showingFonts', { start: startItem, end: endItem, total: totalItems })}
         </div>
 
-        {/* Next Button */}
-        <button
-          type="button"
-          disabled={currentPage >= totalPages}
-          onClick={() => onPageChange(currentPage + 1)}
-          className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-medium liquid-btn text-slate-700 dark:text-slate-200 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
-          aria-label={t('nextPage')}
-        >
-          <span className="hidden xs:inline">{t('nextPage')}</span>
-          <ChevronRight className="w-3.5 h-3.5" />
-        </button>
+        {/* Page Size Selector (5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 100) */}
+        <div className="flex items-center gap-1.5 text-xs">
+          <span className="text-slate-400 dark:text-slate-500 flex items-center gap-1">
+            <Layers className="w-3.5 h-3.5 opacity-70" />
+            <span>{t('fontsPerPage')}:</span>
+          </span>
+          <select
+            value={pageSize}
+            onChange={(e) => onPageSizeChange(Number(e.target.value))}
+            className="px-2.5 py-1 rounded-xl text-xs font-semibold liquid-input text-slate-800 dark:text-slate-100 cursor-pointer focus-visible:outline-none"
+            aria-label={t('fontsPerPage')}
+          >
+            {PAGE_SIZE_OPTIONS.map((size) => (
+              <option
+                key={size}
+                value={size}
+                className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white"
+              >
+                {size}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
 
-      {/* Jump to page form */}
-      <form onSubmit={handleJump} className="flex items-center gap-1.5 text-xs">
-        <span className="text-slate-400">{t('jumpToPage')}:</span>
-        <input
-          type="number"
-          min={1}
-          max={totalPages}
-          value={jumpInput}
-          onChange={(e) => setJumpInput(e.target.value)}
-          placeholder={`${currentPage}`}
-          className="w-14 px-2 py-1 rounded-md text-xs font-medium text-center liquid-input text-slate-900 dark:text-white focus-visible:outline-none"
-          aria-label={t('jumpToPage')}
-        />
-        <button
-          type="submit"
-          className="px-2.5 py-1 rounded-md liquid-btn text-slate-700 dark:text-slate-200 text-xs font-medium"
-        >
-          Go
-        </button>
-      </form>
+      {/* Center: Page navigation controls */}
+      {totalPages > 1 && (
+        <div className="flex items-center gap-1.5 flex-wrap justify-center">
+          {/* Previous Button */}
+          <GlassButton
+            variant="glass"
+            size="sm"
+            disabled={currentPage <= 1}
+            onClick={() => onPageChange(currentPage - 1)}
+            aria-label={t('prevPage')}
+          >
+            <ChevronLeft className="w-3.5 h-3.5" />
+            <span className="hidden xs:inline">{t('prevPage')}</span>
+          </GlassButton>
+
+          {/* Numbered buttons */}
+          <div className="flex items-center gap-1">
+            {getPageNumbers().map((p, idx) => {
+              if (p === '...') {
+                return (
+                  <span key={`ellipsis-${idx}`} className="px-1.5 text-xs text-slate-400">
+                    ...
+                  </span>
+                );
+              }
+
+              const pageNum = p as number;
+              const isCurrent = pageNum === currentPage;
+
+              return (
+                <GlassButton
+                  key={pageNum}
+                  variant={isCurrent ? 'primary' : 'glass'}
+                  size="sm"
+                  isActive={isCurrent}
+                  onClick={() => onPageChange(pageNum)}
+                  className={`w-8 h-8 p-0 text-xs font-semibold ${
+                    isCurrent ? `${accentClasses.bg} text-white shadow-xs` : ''
+                  }`}
+                  aria-label={`Page ${pageNum}`}
+                  aria-current={isCurrent ? 'page' : undefined}
+                >
+                  {pageNum}
+                </GlassButton>
+              );
+            })}
+          </div>
+
+          {/* Next Button */}
+          <GlassButton
+            variant="glass"
+            size="sm"
+            disabled={currentPage >= totalPages}
+            onClick={() => onPageChange(currentPage + 1)}
+            aria-label={t('nextPage')}
+          >
+            <span className="hidden xs:inline">{t('nextPage')}</span>
+            <ChevronRight className="w-3.5 h-3.5" />
+          </GlassButton>
+        </div>
+      )}
+
+      {/* Right side: Jump to page form */}
+      {totalPages > 1 && (
+        <form onSubmit={handleJump} className="flex items-center gap-1.5 text-xs">
+          <span className="text-slate-400 dark:text-slate-500">{t('jumpToPage')}:</span>
+          <input
+            type="number"
+            min={1}
+            max={totalPages}
+            value={jumpInput}
+            onChange={(e) => setJumpInput(e.target.value)}
+            placeholder={`${currentPage}`}
+            className="w-14 px-2 py-1 rounded-xl text-xs font-medium text-center liquid-input text-slate-900 dark:text-white focus-visible:outline-none"
+            aria-label={t('jumpToPage')}
+          />
+          <GlassButton
+            type="submit"
+            variant="glass"
+            size="sm"
+            className="h-7 px-2.5 text-xs font-medium"
+          >
+            Go
+          </GlassButton>
+        </form>
+      )}
     </div>
   );
 };

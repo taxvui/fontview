@@ -218,7 +218,7 @@ export const FontCard: React.FC<FontCardProps> = ({
         </div>
 
         {/* Live Typography Preview Area - Apple Frosted Inset Specimen Plate */}
-        <div className="my-3 min-h-[96px] flex items-center rounded-2xl p-3.5 bg-slate-50/50 dark:bg-slate-950/40 backdrop-blur-md border border-white/80 dark:border-white/5 shadow-[inset_0_1px_3px_rgba(0,0,0,0.03)] dark:shadow-[inset_0_1px_4px_rgba(0,0,0,0.3)] transition-colors overflow-hidden">
+        <div className="my-3 min-h-[96px] flex items-center rounded-2xl p-4 bg-white/45 dark:bg-slate-950/55 backdrop-blur-md border border-white/80 dark:border-white/10 shadow-[inset_0_1px_2.5px_rgba(0,0,0,0.03)] dark:shadow-[inset_0_1px_3px_rgba(0,0,0,0.4)] transition-colors overflow-hidden">
           {loadStatus === 'loading' && (
             <div className="w-full flex items-center justify-center py-6 text-xs text-slate-400 animate-pulse gap-2">
               <RotateCw className="w-3.5 h-3.5 animate-spin text-indigo-500" />
@@ -242,7 +242,7 @@ export const FontCard: React.FC<FontCardProps> = ({
           {loadStatus !== 'loading' && loadStatus !== 'error' && (
             <div
               style={previewStyle}
-              className="w-full break-words select-text transition-all leading-normal text-slate-900 dark:text-slate-100"
+              className="w-full break-words select-text transition-all leading-normal text-slate-900 dark:text-white"
             >
               {previewSettings.text || t('defaultPreviewText')}
             </div>

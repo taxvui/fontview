@@ -22,7 +22,7 @@ import {
   toggleSavedFavorite,
 } from './services/googleFontsService';
 
-const PAGE_SIZE = 20;
+const DEFAULT_PAGE_SIZE = 30;
 
 const DEFAULT_PREVIEW_SETTINGS: PreviewSettings = {
   text: 'The quick brown fox jumps over the lazy dog',
@@ -57,6 +57,7 @@ const MainAppContent: React.FC = () => {
   const [previewSettings, setPreviewSettings] = useState<PreviewSettings>(DEFAULT_PREVIEW_SETTINGS);
   const [filters, setFilters] = useState<FilterState>(DEFAULT_FILTERS);
   const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState<number>(DEFAULT_PAGE_SIZE);
 
   const [favorites, setFavorites] = useState<string[]>(() => getSavedFavorites());
   const [detailFont, setDetailFont] = useState<GoogleFont | null>(null);
@@ -190,15 +191,15 @@ const MainAppContent: React.FC = () => {
     return list;
   }, [filteredFonts, filters.sortBy]);
 
-  // Pagination calculation: exactly 20 fonts per page
+  // Pagination calculation: dynamic fonts per page (default 30)
   const totalItems = sortedFonts.length;
-  const totalPages = Math.ceil(totalItems / PAGE_SIZE) || 1;
+  const totalPages = Math.ceil(totalItems / pageSize) || 1;
   const safeCurrentPage = Math.min(Math.max(1, currentPage), totalPages);
 
   const displayedFonts = useMemo(() => {
-    const start = (safeCurrentPage - 1) * PAGE_SIZE;
-    return sortedFonts.slice(start, start + PAGE_SIZE);
-  }, [sortedFonts, safeCurrentPage]);
+    const start = (safeCurrentPage - 1) * pageSize;
+    return sortedFonts.slice(start, start + pageSize);
+  }, [sortedFonts, safeCurrentPage, pageSize]);
 
   const handlePageChange = (newPage: number) => {
     setCurrentPage(newPage);
@@ -209,6 +210,11 @@ const MainAppContent: React.FC = () => {
     } else {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
+  };
+
+  const handlePageSizeChange = (newSize: number) => {
+    setPageSize(newSize);
+    setCurrentPage(1);
   };
 
   return (
@@ -252,7 +258,7 @@ const MainAppContent: React.FC = () => {
           onClearFilters={handleClearFilters}
         />
 
-        {/* 20 Fonts Display Grid */}
+        {/* Fonts Display Grid */}
         <FontGrid
           fonts={displayedFonts}
           previewSettings={previewSettings}
@@ -266,8 +272,9 @@ const MainAppContent: React.FC = () => {
           currentPage={safeCurrentPage}
           totalPages={totalPages}
           totalItems={totalItems}
-          pageSize={PAGE_SIZE}
+          pageSize={pageSize}
           onPageChange={handlePageChange}
+          onPageSizeChange={handlePageSizeChange}
         />
       </main>
 
