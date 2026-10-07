@@ -1,0 +1,6 @@
+{
+  "name": "Google Fonts Studio - Realtime Typography Preview",
+  "description": "Comprehensive Google Fonts preview and typography inspector with real-time text testing, variable font axes, variant weights, dark mode, and multi-language support.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
