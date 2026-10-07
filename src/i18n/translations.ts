@@ -2,6 +2,15 @@ import { Language } from '../types/font';
 
 export const translations = {
   vi: {
+    compareTitle: "So sánh font",
+    compareHint: "Chọn tối đa 4 font để xem cạnh nhau.",
+    compareBack: "Quay lại danh sách",
+    compareShow: "Xem so sánh",
+    compareClear: "Xóa lựa chọn",
+    compareSelected: "✓ Đã chọn so sánh",
+    compareAdd: "+ So sánh",
+    clipboardError: "Không thể sao chép CSS. Vui lòng kiểm tra quyền clipboard.",
+
     appTitle: 'Google Fonts Studio',
     appSubtitle: 'Trình xem trước & Khám phá Typography chuẩn Google Fonts',
     searchPlaceholder: 'Tìm kiếm font (ví dụ: Roboto, Inter, Playfair)...',
@@ -98,6 +107,15 @@ export const translations = {
     quickSizes: 'Cỡ nhanh',
   },
   en: {
+    compareTitle: "Compare fonts",
+    compareHint: "Choose up to 4 fonts to compare side by side.",
+    compareBack: "Back to catalog",
+    compareShow: "Compare selected",
+    compareClear: "Clear selection",
+    compareSelected: "✓ Selected for comparison",
+    compareAdd: "+ Compare",
+    clipboardError: "Could not copy CSS. Check clipboard permissions.",
+
     appTitle: 'Google Fonts Studio',
     appSubtitle: 'Real-time Google Fonts Typography Explorer & Previewer',
     searchPlaceholder: 'Search fonts (e.g. Roboto, Inter, Playfair)...',
@@ -194,6 +212,15 @@ export const translations = {
     quickSizes: 'Quick Sizes',
   },
   zh: {
+    compareTitle: "字体对比",
+    compareHint: "最多选择四种字体进行对比。",
+    compareBack: "返回列表",
+    compareShow: "查看对比",
+    compareClear: "清空选择",
+    compareSelected: "✓ 已选择",
+    compareAdd: "+ 对比",
+    clipboardError: "无法复制 CSS，请检查剪贴板权限。",
+
     appTitle: 'Google 字体工坊',
     appSubtitle: '实时 Google Fonts 字体预览与排版探索工具',
     searchPlaceholder: '搜索字体（例如：Roboto, Inter, Playfair）...',
@@ -290,3 +317,4 @@ export const translations = {
     quickSizes: '常用字号',
   },
 } as const;
+

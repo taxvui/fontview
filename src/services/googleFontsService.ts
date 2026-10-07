@@ -15,8 +15,8 @@ const WEIGHT_NAMES: Record<number, string> = {
 
 const STORAGE_KEY_FAVORITES = 'gfonts_favorites_v1';
 const STORAGE_KEY_API_KEY = 'gfonts_custom_api_key_v1';
-const STORAGE_KEY_CACHE = 'gfonts_api_cache_data_v1';
-const STORAGE_KEY_CACHE_TIME = 'gfonts_api_cache_time_v1';
+const STORAGE_KEY_CACHE = 'gfonts_api_cache_data_v2';
+const STORAGE_KEY_CACHE_TIME = 'gfonts_api_cache_time_v2';
 const CACHE_DURATION_MS = 24 * 60 * 60 * 1000; // 24 hours
 
 export function parseVariant(raw: string): ParsedVariant {
@@ -64,15 +64,17 @@ export function getSortedVariants(variants: string[]): ParsedVariant[] {
 export function buildGoogleFontUrl(font: GoogleFont): string {
   const familyEncoded = encodeURIComponent(font.family).replace(/%20/g, '+');
 
-  // If font is variable with wght axis:
-  if (font.isVariable && font.axes?.some((a) => a.tag === 'wght')) {
-    const wghtAxis = font.axes.find((a) => a.tag === 'wght')!;
+  if (font.isVariable && font.axes?.length) {
     const hasItalic = font.variants.some((v) => v.includes('italic'));
-
-    if (hasItalic) {
-      return `https://fonts.googleapis.com/css2?family=${familyEncoded}:ital,wght@0,${wghtAxis.min}..${wghtAxis.max};1,${wghtAxis.min}..${wghtAxis.max}&display=swap`;
-    }
-    return `https://fonts.googleapis.com/css2?family=${familyEncoded}:wght@${wghtAxis.min}..${wghtAxis.max}&display=swap`;
+    const hasNormal = font.variants.some((v) => !v.includes('italic'));
+    const axes = font.axes.filter((a) => a.tag !== 'ital').map((a) => ({
+      tag: a.tag, value: a.min === a.max ? String(a.min) : `${a.min}..${a.max}`,
+    }));
+    if (hasItalic) axes.push({ tag: 'ital', value: '0' });
+    axes.sort((a, b) => a.tag < b.tag ? -1 : a.tag > b.tag ? 1 : 0);
+    const styles = hasItalic ? (hasNormal ? [0, 1] : [1]) : [0];
+    const tuples = styles.map((style) => axes.map((axis) => axis.tag === 'ital' ? style : axis.value).join(','));
+    return `https://fonts.googleapis.com/css2?family=${familyEncoded}:${axes.map((a) => a.tag).join(',')}@${tuples.join(';')}&display=swap`;
   }
 
   // Non-variable or discrete variant list
@@ -105,56 +107,45 @@ export function buildGoogleFontUrl(font: GoogleFont): string {
   return `https://fonts.googleapis.com/css2?family=${familyEncoded}&display=swap`;
 }
 
-// Track loaded font link elements to avoid duplicate network tags
-const loadedFontUrls = new Set<string>();
+// Share in-flight requests; a failed request is removed so Retry makes a new request.
+const fontLoads = new Map<string, Promise<boolean>>();
 
-/**
- * Dynamically loads a Google Font by injecting a <link> stylesheet into document.head
- */
-export async function loadGoogleFont(font: GoogleFont): Promise<boolean> {
+export function loadGoogleFont(font: GoogleFont): Promise<boolean> {
   const url = buildGoogleFontUrl(font);
-  if (loadedFontUrls.has(url)) {
-    return true;
-  }
-
-  const id = `gfont-link-${font.family.toLowerCase().replace(/[^a-z0-9]/g, '-')}`;
-  const existingLink = document.getElementById(id);
-  if (existingLink) {
-    loadedFontUrls.add(url);
-    return true;
-  }
-
-  return new Promise((resolve) => {
+  const pending = fontLoads.get(url);
+  if (pending) return pending;
+  const promise = new Promise<boolean>((resolve) => {
     const link = document.createElement('link');
-    link.id = id;
     link.rel = 'stylesheet';
     link.href = url;
-
-    const timeoutId = setTimeout(() => {
-      // Resolve true anyway so it falls back to system font smoothly without hanging
-      resolve(true);
-    }, 4500);
-
-    link.onload = () => {
-      clearTimeout(timeoutId);
-      loadedFontUrls.add(url);
-      // Wait for document.fonts to catch up if API available
-      if ('fonts' in document) {
-        document.fonts.load(`16px "${font.family}"`).finally(() => {
-          resolve(true);
-        });
-      } else {
-        resolve(true);
+    let settled = false;
+    const finish = (success: boolean) => {
+      if (settled) return;
+      settled = true;
+      clearTimeout(timer);
+      link.onload = null;
+      link.onerror = null;
+      if (!success) {
+        link.remove();
+        fontLoads.delete(url);
+      }
+      resolve(success);
+    };
+    const timer = setTimeout(() => finish(false), 15000);
+    link.onerror = () => finish(false);
+    link.onload = async () => {
+      try {
+        const variant = getSortedVariants(font.variants)[0];
+        const faces = await document.fonts.load(`${variant?.isItalic ? 'italic ' : ''}${variant?.weight || 400} 16px "${font.family}"`);
+        finish(faces.length > 0);
+      } catch {
+        finish(false);
       }
     };
-
-    link.onerror = () => {
-      clearTimeout(timeoutId);
-      resolve(false);
-    };
-
     document.head.appendChild(link);
   });
+  fontLoads.set(url, promise);
+  return promise;
 }
 
 /**
@@ -190,9 +181,15 @@ export async function getGoogleFontsCatalog(apiKeyOverride?: string): Promise<{
 
       if (response.ok) {
         const json = await response.json();
+        // Keep static variants for weight pills and enrich with variable metadata.
+        const vfResponse = await fetch(`https://www.googleapis.com/webfonts/v1/webfonts?key=${encodeURIComponent(apiKey)}&capability=VF&sort=popularity`);
+        if (!vfResponse.ok) throw new Error('Variable metadata request failed');
+        const vfJson = await vfResponse.json();
+        const variableItems = new Map<string, any>((vfJson.items || []).map((item: any) => [item.family, item]));
         if (json.items && Array.isArray(json.items)) {
           const apiFonts: GoogleFont[] = json.items.map((item: any, index: number) => {
             const axes: VariableAxis[] = [];
+            item = { ...item, axes: variableItems.get(item.family)?.axes };
             const isVariable = Boolean(item.axes && item.axes.length > 0);
 
             if (item.axes && Array.isArray(item.axes)) {
@@ -202,8 +199,8 @@ export async function getGoogleFontsCatalog(apiKeyOverride?: string): Promise<{
                   name: ax.tag === 'wght' ? 'Weight' : ax.tag === 'wdth' ? 'Width' : ax.tag === 'slnt' ? 'Slant' : ax.tag === 'opsz' ? 'Optical Size' : ax.tag,
                   min: ax.start,
                   max: ax.end,
-                  default: ax.tag === 'wght' ? 400 : ax.start,
-                  step: ax.tag === 'wght' ? 10 : 1,
+                  default: Math.min(ax.end, Math.max(ax.start, ax.tag === 'wght' ? 400 : ax.tag === 'wdth' ? 100 : ax.tag === 'opsz' ? 14 : 0)),
+                  step: (ax.end - ax.start) < 10 ? 0.01 : 1,
                 });
               });
             }
@@ -247,7 +244,8 @@ export async function getGoogleFontsCatalog(apiKeyOverride?: string): Promise<{
 export function getSavedFavorites(): string[] {
   try {
     const raw = localStorage.getItem(STORAGE_KEY_FAVORITES);
-    return raw ? JSON.parse(raw) : [];
+    const parsed = raw ? JSON.parse(raw) : [];
+    return Array.isArray(parsed) ? parsed.filter((v): v is string => typeof v === 'string') : [];
   } catch {
     return [];
   }
@@ -273,6 +271,8 @@ export function getStoredApiKey(): string {
 }
 
 export function setStoredApiKey(key: string): void {
+  localStorage.removeItem(STORAGE_KEY_CACHE);
+  localStorage.removeItem(STORAGE_KEY_CACHE_TIME);
   if (key) {
     localStorage.setItem(STORAGE_KEY_API_KEY, key.trim());
   } else {
@@ -281,3 +281,4 @@ export function setStoredApiKey(key: string): void {
     localStorage.removeItem(STORAGE_KEY_CACHE_TIME);
   }
 }
+

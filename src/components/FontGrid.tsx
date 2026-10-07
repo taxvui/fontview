@@ -8,6 +8,9 @@ import { BrandLogo } from './BrandLogo';
 
 interface FontGridProps {
   fonts: GoogleFont[];
+  compareMode: boolean;
+  comparedFamilies: string[];
+  onToggleCompare: (family: string) => void;
   previewSettings: PreviewSettings;
   favorites: string[];
   onToggleFavorite: (family: string) => void;
@@ -16,6 +19,9 @@ interface FontGridProps {
 
 export const FontGrid: React.FC<FontGridProps> = ({
   fonts,
+  compareMode,
+  comparedFamilies,
+  onToggleCompare,
   previewSettings,
   favorites,
   onToggleFavorite,
@@ -42,11 +48,14 @@ export const FontGrid: React.FC<FontGridProps> = ({
 
   return (
     <div id="font-grid-top" className="w-full scroll-mt-24">
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+      <div className={`grid grid-cols-1 md:grid-cols-2 ${compareMode ? '' : 'xl:grid-cols-3'} gap-5`}>
         {fonts.map((font) => (
           <FontCard
             key={font.family}
             font={font}
+            isCompared={comparedFamilies.includes(font.family)}
+            compareDisabled={comparedFamilies.length >= 4 && !comparedFamilies.includes(font.family)}
+            onToggleCompare={onToggleCompare}
             previewSettings={previewSettings}
             isFavorite={favorites.includes(font.family)}
             onToggleFavorite={onToggleFavorite}
@@ -59,3 +68,4 @@ export const FontGrid: React.FC<FontGridProps> = ({
     </div>
   );
 };
+

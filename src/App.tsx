@@ -20,6 +20,7 @@ import {
   getGoogleFontsCatalog,
   getSavedFavorites,
   toggleSavedFavorite,
+  parseVariant,
 } from './services/googleFontsService';
 
 const DEFAULT_PAGE_SIZE = 30;
@@ -60,6 +61,8 @@ const MainAppContent: React.FC = () => {
   const [pageSize, setPageSize] = useState<number>(DEFAULT_PAGE_SIZE);
 
   const [favorites, setFavorites] = useState<string[]>(() => getSavedFavorites());
+  const [compareFamilies, setCompareFamilies] = useState<string[]>([]);
+  const [compareOnly, setCompareOnly] = useState(false);
   const [detailFont, setDetailFont] = useState<GoogleFont | null>(null);
   const [isApiModalOpen, setIsApiModalOpen] = useState(false);
 
@@ -149,7 +152,7 @@ const MainAppContent: React.FC = () => {
 
       // 6. Multiple Weights (3+)
       if (filters.multipleWeightsOnly) {
-        if (font.variants.length < 3) return false;
+        if (new Set(font.variants.map((v) => parseVariant(v).weight)).size < 3) return false;
       }
 
       // 7. Favorites Only
@@ -258,9 +261,20 @@ const MainAppContent: React.FC = () => {
           onClearFilters={handleClearFilters}
         />
 
+        <section className="liquid-glass rounded-2xl p-4 mb-5 flex flex-wrap items-center gap-3" aria-label="Compare fonts">
+          <strong>{t('compareTitle')} ({compareFamilies.length}/4)</strong>
+          <span className="text-sm flex-1">{compareFamilies.join(' · ') || t('compareHint')}</span>
+          <button type="button" disabled={compareFamilies.length < 2 && !compareOnly} onClick={() => setCompareOnly(!compareOnly)} className="liquid-btn rounded-lg px-3 py-2 disabled:opacity-40">
+            {compareOnly ? t('compareBack') : t('compareShow')}
+          </button>
+          <button type="button" onClick={() => { setCompareFamilies([]); setCompareOnly(false); }} className="px-3 py-2">{t('compareClear')}</button>
+        </section>
         {/* Fonts Display Grid */}
         <FontGrid
-          fonts={displayedFonts}
+          fonts={compareOnly ? allFonts.filter((f) => compareFamilies.includes(f.family)) : displayedFonts}
+          compareMode={compareOnly}
+          comparedFamilies={compareFamilies}
+          onToggleCompare={(family) => setCompareFamilies((prev) => prev.includes(family) ? prev.filter((f) => f !== family) : prev.length < 4 ? [...prev, family] : prev)}
           previewSettings={previewSettings}
           favorites={favorites}
           onToggleFavorite={handleToggleFavorite}
@@ -268,14 +282,14 @@ const MainAppContent: React.FC = () => {
         />
 
         {/* Pagination Section */}
-        <Pagination
+        {!compareOnly && <Pagination
           currentPage={safeCurrentPage}
           totalPages={totalPages}
           totalItems={totalItems}
           pageSize={pageSize}
           onPageChange={handlePageChange}
           onPageSizeChange={handlePageSizeChange}
-        />
+        />}
       </main>
 
       {/* Footer */}
@@ -336,3 +350,4 @@ export default function App() {
     </ThemeProvider>
   );
 }
+
