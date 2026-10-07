@@ -21,6 +21,9 @@ import { GlassButton } from './ui/glass-button';
 
 interface FontCardProps {
   font: GoogleFont;
+  isCompared: boolean;
+  compareDisabled: boolean;
+  onToggleCompare: (family: string) => void;
   previewSettings: PreviewSettings;
   isFavorite: boolean;
   onToggleFavorite: (family: string) => void;
@@ -31,6 +34,9 @@ interface FontCardProps {
 
 export const FontCard: React.FC<FontCardProps> = ({
   font,
+  isCompared,
+  compareDisabled,
+  onToggleCompare,
   previewSettings,
   isFavorite,
   onToggleFavorite,
@@ -60,7 +66,7 @@ export const FontCard: React.FC<FontCardProps> = ({
   const [showAxes, setShowAxes] = useState(false);
   const [copied, setCopied] = useState(false);
 
-  const handleCopyCss = (e: React.MouseEvent) => {
+  const handleCopyCss = async (e: React.MouseEvent) => {
     e.stopPropagation();
     const fallbackCategory =
       font.category === 'serif'
@@ -70,18 +76,28 @@ export const FontCard: React.FC<FontCardProps> = ({
         : font.category === 'handwriting'
         ? 'cursive'
         : 'sans-serif';
-    const cssText = `font-family: '${font.family}', ${fallbackCategory};`;
-    navigator.clipboard.writeText(cssText);
+    const cssText = `font-family: '${font.family}', ${fallbackCategory};
+font-size: ${previewSettings.fontSize}px;
+font-weight: ${activeWeight};
+font-style: ${activeFontStyle};
+line-height: ${previewSettings.lineHeight};
+letter-spacing: ${previewSettings.letterSpacing}px;
+text-align: ${previewSettings.textAlign};
+text-transform: ${previewSettings.textTransform};${fontVariationSettings ? `\nfont-variation-settings: ${fontVariationSettings};` : ''}${previewSettings.textColor ? `\ncolor: ${previewSettings.textColor};` : ''}${previewSettings.bgColor !== 'transparent' ? `\nbackground-color: ${previewSettings.bgColor};` : ''}`;
+    try { await navigator.clipboard.writeText(cssText); }
+    catch { showToast(t('clipboardError'), 'error'); return; }
     setCopied(true);
     showToast(`${t('copiedCssToast')} (${font.family})`);
     setTimeout(() => setCopied(false), 2000);
   };
 
   const handleAxisChange = (tag: string, val: number) => {
+    if (tag === 'wght') setSelectedVariant(null);
     setAxisValues((prev) => ({ ...prev, [tag]: val }));
   };
 
   const handleResetAxes = () => {
+    setSelectedVariant(null);
     if (font.axes) {
       const reset: Record<string, number> = {};
       font.axes.forEach((ax) => {
@@ -123,10 +139,14 @@ export const FontCard: React.FC<FontCardProps> = ({
     fontWeight: activeWeight,
     fontStyle: activeFontStyle,
     fontVariationSettings,
+    fontSynthesis: 'none',
   };
 
   return (
     <GlassCard variant="interactive" className="p-5 sm:p-6 flex flex-col justify-between group">
+      <button type="button" aria-pressed={isCompared} disabled={compareDisabled} onClick={() => onToggleCompare(font.family)} className="mb-3 text-sm text-indigo-600 dark:text-indigo-300 disabled:opacity-40 self-start">
+        {isCompared ? t('compareSelected') : t('compareAdd')}
+      </button>
       {/* Top Header */}
       <div>
         <div className="flex items-start justify-between gap-3 mb-3">
@@ -267,9 +287,11 @@ export const FontCard: React.FC<FontCardProps> = ({
           selectedVariant={selectedVariant}
           onSelectVariant={(v) => {
             if (selectedVariant?.raw === v.raw) {
-              setSelectedVariant(null); // toggle off to reset to default
+              setSelectedVariant(null);
+              if (font.axes) setAxisValues(Object.fromEntries(font.axes.map((a) => [a.tag, a.default])));
             } else {
               setSelectedVariant(v);
+              if (font.axes?.some((a) => a.tag === 'wght')) setAxisValues((prev) => ({ ...prev, wght: v.weight }));
             }
           }}
           previewText={previewSettings.text}
@@ -279,3 +301,4 @@ export const FontCard: React.FC<FontCardProps> = ({
     </GlassCard>
   );
 };
+
